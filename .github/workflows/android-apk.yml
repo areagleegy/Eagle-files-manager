@@ -1,0 +1,83 @@
+name: Build Offline Android APK
+
+on:
+  push:
+    branches: [ main, "ai-studio/**", "feat/**", "feature/**" ]
+    tags: [ "v*" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test and build APK (Android 14+)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.13'
+
+      - name: Verify Android 14+ support and offline-only manifest
+        shell: bash
+        run: |
+          grep -q 'minSdk = 34' app/build.gradle.kts
+          grep -q 'targetSdk = 36' app/build.gradle.kts
+          if grep -Eq 'android\\.permission\\.(INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE|CHANGE_NETWORK_STATE|CHANGE_WIFI_STATE)' app/src/main/AndroidManifest.xml; then
+            echo 'Network permission found in the application manifest.' >&2
+            exit 1
+          fi
+          if grep -RniE 'firebase|play-services-ads|play-services-measurement|billingclient|okhttp|retrofit' app/build.gradle.kts; then
+            echo 'A prohibited network/service dependency was found.' >&2
+            exit 1
+          fi
+
+      - name: Run unit tests and build debug APK
+        run: gradle --no-daemon :app:testDebugUnitTest :app:assembleDebug
+
+      - name: Verify APK and print checksum
+        shell: bash
+        run: |
+          APK='app/build/outputs/apk/debug/app-debug.apk'
+          test -f "$APK"
+          if "$ANDROID_HOME/build-tools/36.0.0/aapt" dump permissions "$APK" | grep -q 'android.permission.INTERNET'; then
+            echo 'Built APK unexpectedly requests android.permission.INTERNET.' >&2
+            exit 1
+          fi
+          sha256sum "$APK"
+          ls -lh "$APK"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eagle-files-manager-android14plus-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload test reports if a step fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+          retention-days: 14
