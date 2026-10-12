@@ -81,3 +81,24 @@ jobs:
           path: app/build/reports/tests/
           if-no-files-found: ignore
           retention-days: 14
+
+  publish-release:
+    name: Publish APK as a direct-download release asset
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download built APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: eagle-files-manager-android14plus-debug-apk
+          path: release-assets
+
+      - name: Publish GitHub Release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Eagle Files Manager ${{ github.ref_name }}
+          generate_release_notes: true
+          files: release-assets/app-debug.apk
