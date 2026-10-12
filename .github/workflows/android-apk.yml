@@ -41,7 +41,7 @@ jobs:
         run: |
           grep -q 'minSdk = 34' app/build.gradle.kts
           grep -q 'targetSdk = 36' app/build.gradle.kts
-          if grep -Eq 'android\\.permission\\.(INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE|CHANGE_NETWORK_STATE|CHANGE_WIFI_STATE)' app/src/main/AndroidManifest.xml; then
+          if grep -Eq 'android\.permission\.(INTERNET|ACCESS_NETWORK_STATE|ACCESS_WIFI_STATE|CHANGE_NETWORK_STATE|CHANGE_WIFI_STATE)' app/src/main/AndroidManifest.xml; then
             echo 'Network permission found in the application manifest.' >&2
             exit 1
           fi
