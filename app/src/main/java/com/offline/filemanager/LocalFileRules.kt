@@ -18,11 +18,15 @@ internal object LocalFileRules {
     fun isTextDocument(name: String): Boolean = extensionOf(name) in textExtensions
     fun isDocument(name: String): Boolean = isPdf(name) || isTextDocument(name) || extensionOf(name) in documentExtensions
 
-    /** Reject absolute paths, drive paths, and traversal segments from ZIP entries. */
+    /** Reject absolute paths, drive paths, traversal segments, and ambiguous repeated separators. */
     fun isSafeArchivePath(path: String): Boolean {
         if (path.isBlank() || path.startsWith('/') || path.startsWith('\\')) return false
         if (Regex("^[A-Za-z]:").containsMatchIn(path)) return false
-        val segments = path.replace('\\', '/').split('/')
+        val normalized = path.replace('\\', '/')
+        // Permit one trailing slash for directory entries, but never empty interior segments
+        // or multiple trailing separators.
+        if (normalized.contains("//")) return false
+        val segments = normalized.split('/')
         if (segments.any { it == "." || it == ".." }) return false
         if (segments.dropLastWhile { it.isEmpty() }.any { it.isEmpty() }) return false
         return segments.any { it.isNotEmpty() }

@@ -34,6 +34,8 @@ class LocalFileRulesTest {
         assertFalse(LocalFileRules.isSafeArchivePath("/absolute/path.txt"))
         assertFalse(LocalFileRules.isSafeArchivePath("C:\\temp\\payload.txt"))
         assertFalse(LocalFileRules.isSafeArchivePath("folder//payload.txt"))
+        assertFalse(LocalFileRules.isSafeArchivePath("folder//"))
+        assertFalse(LocalFileRules.isSafeArchivePath("folder\\\\payload.txt"))
         assertTrue(LocalFileRules.isSafeArchivePath("photos/image.jpg"))
         assertTrue(LocalFileRules.isSafeArchivePath("docs/"))
     }

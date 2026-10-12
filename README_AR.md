@@ -2,12 +2,24 @@
 
 تطبيق Android أصلي بلغة Kotlin وJetpack Compose لإدارة الملفات والوسائط والمستندات محليًا. يدعم Android 14 (API 34) وما بعده، ويبنى باستخدام Android SDK 36.
 
+## ⬇️ تنزيل APK
+
+<p align="center">
+  <a href="https://github.com/areagleegy/Eagle-files-manager/releases/latest/download/app-debug.apk">
+    <img src="https://img.shields.io/badge/تنزيل-APK%20مباشر-2ea44f?style=for-the-badge&logo=android" alt="تنزيل APK مباشرة" />
+  </a>
+</p>
+
+سيعمل زر التنزيل المباشر بعد نشر أول GitHub Release وإرفاق الملف `app-debug.apk`. إلى أن يحدث ذلك، افتح [أحدث عمليات البناء في GitHub Actions](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml)، اختر عملية ناجحة، ثم نزّل Artifact باسم `eagle-files-manager-android14plus-debug-apk` واستخرج منه `app-debug.apk`.
+
+> **تنبيه:** هذه نسخة Debug للاختبار وليست إصدارًا إنتاجيًا موقّعًا. قد تحتاج إلى السماح للمتصفح أو مدير الملفات بتثبيت التطبيقات من مصادر غير معروفة.
+
 ## الميزات
 
 - مدير ملفات: تصفح المجلدات، بحث وفرز، إنشاء مجلد، إعادة تسمية، حذف، نسخ ونقل.
 - عارض صور للأنواع الشائعة مثل JPG وPNG وGIF وWebP وBMP وHEIC/HEIF وAVIF عندما يدعمها النظام.
 - مشغل صوت داخلي ومشغل فيديو داخلي؛ دعم الترميز يعتمد على إمكانات Android والجهاز.
-- محرك ZIP: عرض محتويات الأرشيف، إنشاء ZIP من العناصر المحددة، واستخراج آمن مع فحوص Zip Slip وحدود للحجم وعدد العناصر، وعدم الكتابة فوق الملفات الموجودة.
+- محرك ZIP: عرض محتويات الأرشيف، إنشاء ZIP من العناصر المحددة، واستخراج مع فحوص Zip Slip وحدود للحجم وعدد العناصر، ومنع الكتابة فوق الملفات الموجودة.
 - قارئ PDF داخلي مع التنقل بين الصفحات، وقارئ للملفات النصية بحد عرض 1 ميبيبايت. ملفات Office وغيرها يمكن فتحها بتطبيق مثبت محليًا.
 - واجهة عربية RTL مع فلاتر للصور والفيديو والصوت والمستندات والأرشيف.
 
@@ -18,21 +30,12 @@
 - يختار المستخدم مجلدًا بنفسه عبر منتقي Android، ويحتفظ التطبيق بإذن الوصول إلى ذلك المجلد فقط.
 - عمليات إدارة الملفات والأرشفة تعمل محليًا؛ ما يفتحه المستخدم في تطبيق خارجي يخضع لذلك التطبيق.
 
-## تنزيل APK التجريبي
-
-1. افتح تبويب **Actions** في المستودع.
-2. شغّل **Build Offline Android APK** أو افتح تشغيلًا بدأ بعد push أو Pull Request.
-3. بعد نجاح البناء، نزّل Artifact باسم `eagle-files-manager-android14plus-debug-apk`.
-4. استخرج `app-debug.apk` وثبّته على جهاز يعمل بنظام Android 14 أو أحدث.
-
-هذا APK من نوع Debug للاختبار وليس إصدار Release موقّعًا للنشر.
-
 ## قيود معلومة
 
 - الأرشيفات المدعومة حاليًا ZIP فقط؛ RAR و7z غير مضافين.
 - لا توجد محررات أو عارضات Office متكاملة داخل التطبيق.
 - دعم بعض الصور/الصوت/الفيديو يعتمد على تنسيق الملف وما يدعمه الجهاز.
-- لا يعتبر البناء ناجحًا حتى ينجح GitHub Actions؛ يجب لاحقًا اختبار APK على جهاز فعلي.
+- يجب نجاح GitHub Actions واختبار APK على جهاز فعلي قبل اعتبار التطبيق جاهزًا للإصدار.
 
 ## إعدادات البناء
 
@@ -40,3 +43,6 @@
 - `minSdk = 34` (Android 14)
 - `targetSdk = 36`
 - JDK 17، Gradle 8.13، Android Gradle Plugin 8.13.2، Kotlin 2.2.20
+
+- [سير عمل البناء والنشر](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml)
+- [صفحة الإصدارات](https://github.com/areagleegy/Eagle-files-manager/releases)
