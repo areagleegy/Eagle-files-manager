@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.FileManagerOffline" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#355D8A</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+    </style>
+</resources>
