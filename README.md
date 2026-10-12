@@ -7,17 +7,16 @@ Offline-first Android file manager for **Android 14 (API 34) and newer**.
 ## ⬇️ Download APK
 
 <p align="center">
-  <a href="https://github.com/areagleegy/Eagle-files-manager/actions/runs/38247954049">
-    <img src="https://img.shields.io/badge/Download-Android%20APK-2ea44f?style=for-the-badge&logo=android" alt="Download Android APK" />
+  <a href="https://github.com/areagleegy/Eagle-files-manager/releases/latest/download/app-debug.apk">
+    <img src="https://img.shields.io/badge/Download-APK%20Directly-2ea44f?style=for-the-badge&logo=android" alt="Download APK directly" />
   </a>
 </p>
 
-**How to download and install**
-1. Tap the **Download Android APK** button above.
-2. On the GitHub Actions run page, find **Artifacts** and download `eagle-files-manager-android14plus-debug-apk`.
-3. Extract the downloaded ZIP archive and install `app-debug.apk` on your Android 14+ device. Android may ask you to allow installation from your browser or file manager.
+The button above is the **direct APK URL** and will work once a GitHub Release has been published with the APK attached.
 
-> **Note:** GitHub Actions currently provides the APK inside a ZIP artifact, not as a standalone APK link. This is a debug/test build, not a signed production release. The artifact for the linked run expires on **November 11, 2026**.
+**Until the first release is published:** use the [latest successful GitHub Actions build](https://github.com/areagleegy/Eagle-files-manager/actions/runs/38247954049), download the `eagle-files-manager-android14plus-debug-apk` artifact, extract the ZIP, then install `app-debug.apk`.
+
+> **Build type:** debug/test APK, not a signed production release. Installation may require allowing your browser or file manager to install unknown apps.
 
 ## Features
 
@@ -34,6 +33,9 @@ Offline-first Android file manager for **Android 14 (API 34) and newer**.
 - Designed for Android 14 (API 34) and newer.
 - Offline-first: the app does not request Android's `INTERNET` permission.
 
-## Build status
+## Build and release
 
-The Android APK is built with GitHub Actions. See [workflow runs](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml) for build history.
+GitHub Actions runs unit tests, builds the debug APK, and checks that the built app does not request network permission. Pushing a version tag such as `v0.1.0` will run the release job and attach `app-debug.apk` to a GitHub Release.
+
+- [Build workflow](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml)
+- [GitHub Releases](https://github.com/areagleegy/Eagle-files-manager/releases)
