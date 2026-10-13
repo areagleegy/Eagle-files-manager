@@ -12,9 +12,9 @@ Offline-first Android file manager for **Android 14 (API 34) and newer**.
   </a>
 </p>
 
-The button above is the **direct APK URL** and will work once a GitHub Release has been published with the APK attached.
+The button above is the **direct APK URL** and works after the first GitHub Release is published with the APK attached.
 
-**Until the first release is published:** use the [latest successful GitHub Actions build](https://github.com/areagleegy/Eagle-files-manager/actions/runs/38247954049), download the `eagle-files-manager-android14plus-debug-apk` artifact, extract the ZIP, then install `app-debug.apk`.
+**To publish a release without creating a tag manually:** open the [build workflow](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml), click **Run workflow** on `main`, set `publish_release` to `true` and `release_tag` to `v1.2.0`, then start the run. After tests and the APK build succeed, the workflow creates the release and attaches `app-debug.apk`. For a build-only run, leave `publish_release` set to `false`.
 
 > **Build type:** debug/test APK, not a signed production release. Installation may require allowing your browser or file manager to install unknown apps.
 
