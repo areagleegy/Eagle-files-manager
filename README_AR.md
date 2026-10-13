@@ -10,7 +10,7 @@
   </a>
 </p>
 
-سيعمل زر التنزيل المباشر بعد نشر أول GitHub Release وإرفاق الملف `app-debug.apk`. إلى أن يحدث ذلك، افتح [أحدث عمليات البناء في GitHub Actions](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml)، اختر عملية ناجحة، ثم نزّل Artifact باسم `eagle-files-manager-android14plus-debug-apk` واستخرج منه `app-debug.apk`.
+يعمل زر التنزيل المباشر بعد نشر أول GitHub Release وإرفاق `app-debug.apk`. لنشره دون إنشاء Tag يدويًا: افتح [سير عمل البناء](https://github.com/areagleegy/Eagle-files-manager/actions/workflows/android-apk.yml)، اضغط **Run workflow** مع اختيار `main`، واجعل `publish_release` = `true` و`release_tag` = `v1.2.0`، ثم ابدأ التنفيذ. بعد نجاح الاختبارات والبناء، ينشئ سير العمل الإصدار ويرفق ملف APK تلقائيًا. للبناء والاختبار فقط، اترك `publish_release` = `false`.
 
 > **تنبيه:** هذه نسخة Debug للاختبار وليست إصدارًا إنتاجيًا موقّعًا. قد تحتاج إلى السماح للمتصفح أو مدير الملفات بتثبيت التطبيقات من مصادر غير معروفة.
 
