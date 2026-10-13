@@ -42,6 +42,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -105,7 +106,21 @@ private enum class DialogType { CREATE_FOLDER, RENAME, DELETE, CREATE_ZIP }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { FileManagerScreen() } }
+        setContent {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = androidx.compose.ui.graphics.Color(0xFF176B87),
+                    onPrimary = androidx.compose.ui.graphics.Color.White,
+                    secondary = androidx.compose.ui.graphics.Color(0xFF23A995),
+                    background = androidx.compose.ui.graphics.Color(0xFFF4F7FA),
+                    onBackground = androidx.compose.ui.graphics.Color(0xFF172B3A),
+                    surface = androidx.compose.ui.graphics.Color.White,
+                    onSurface = androidx.compose.ui.graphics.Color(0xFF172B3A),
+                    surfaceVariant = androidx.compose.ui.graphics.Color(0xFFEAF0F5),
+                    onSurfaceVariant = androidx.compose.ui.graphics.Color(0xFF5D6E7E)
+                )
+            ) { FileManagerScreen() }
+        }
     }
 }
 
@@ -203,9 +218,36 @@ private fun FileManagerScreen() {
     }
 
     Scaffold(
+        containerColor = androidx.compose.ui.graphics.Color(0xFFF4F7FA),
         topBar = {
             TopAppBar(
-                title = { Text(if (activeFile != null) activeFile?.name ?: "عارض الملفات" else "مدير الملفات المحلي", maxLines = 1) },
+                title = {
+                    if (activeFile != null) {
+                        Text(activeFile?.name ?: "عارض الملفات", maxLines = 1)
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Box(
+                                Modifier.size(38.dp).background(
+                                    androidx.compose.ui.graphics.Color(0xFF12364B),
+                                    RoundedCornerShape(12.dp)
+                                ),
+                                contentAlignment = Alignment.Center
+                            ) { Text("📂") }
+                            Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                Text("Eagle Files", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                Text(
+                                    currentDirectory?.name ?: "مدير الملفات المحلي",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                },
                 navigationIcon = {
                     when {
                         activeFile != null -> TextButton(onClick = { activeFile = null }) { Text("رجوع") }
@@ -238,15 +280,110 @@ private fun FileManagerScreen() {
         } else {
             Column(Modifier.fillMaxSize().padding(padding).padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(9.dp)) {
-                Button(onClick = { folderPicker.launch(null) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (currentDirectory == null) "اختيار مجلد من الجهاز" else "تغيير المجلد الرئيسي")
+                if (currentDirectory != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("ملفاتي", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f))
+                        TextButton(onClick = { folderPicker.launch(null) }) { Text("تغيير المجلد") }
+                    }
                 }
                 if (currentDirectory == null) {
-                    Card(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
-                        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("ملفاتك تبقى على جهازك", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                            Text("تصفح المجلدات، شاهد الصور، شغّل الصوت والفيديو، اقرأ PDF والملفات النصية، وأنشئ أو استخرج أرشيفات ZIP.")
-                            Text("يطلب التطبيق الوصول فقط إلى المجلد الذي تختاره بنفسك.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Card(
+                        shape = RoundedCornerShape(26.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = androidx.compose.material3.CardDefaults.cardColors(
+                            containerColor = androidx.compose.ui.graphics.Color(0xFF12364B)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(20.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(9.dp)
+                            ) {
+                                Text(
+                                    "كل ملفاتك في مكان واحد",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = androidx.compose.ui.graphics.Color.White
+                                )
+                                Text(
+                                    "تصفّح، نظّم، افتح وانقل ملفاتك مع الحفاظ عليها داخل جهازك.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = androidx.compose.ui.graphics.Color(0xFFD7E8F0)
+                                )
+                                Button(
+                                    onClick = { activeFilter = FileFilter.ALL; folderPicker.launch(null) },
+                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                        containerColor = androidx.compose.ui.graphics.Color(0xFF65D8C5),
+                                        contentColor = androidx.compose.ui.graphics.Color(0xFF12364B)
+                                    )
+                                ) { Text("ابدأ تصفح الملفات", fontWeight = FontWeight.Bold) }
+                            }
+                            Box(
+                                Modifier.size(68.dp).background(
+                                    androidx.compose.ui.graphics.Color(0xFF24566D),
+                                    RoundedCornerShape(20.dp)
+                                ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("🗂️", style = MaterialTheme.typography.displaySmall)
+                            }
+                        }
+                    }
+                    Text("تصفّح حسب النوع", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                        HomeCategoryCard(
+                            title = "كل الملفات", subtitle = "المجلدات والملفات",
+                            icon = "📁", tint = androidx.compose.ui.graphics.Color(0xFF1C8190),
+                            modifier = Modifier.weight(1f)
+                        ) { activeFilter = FileFilter.ALL; folderPicker.launch(null) }
+                        HomeCategoryCard(
+                            title = "الصور", subtitle = "صورك المحلية",
+                            icon = "🖼️", tint = androidx.compose.ui.graphics.Color(0xFF6B66C8),
+                            modifier = Modifier.weight(1f)
+                        ) { activeFilter = FileFilter.IMAGES; folderPicker.launch(null) }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                        HomeCategoryCard(
+                            title = "الفيديو", subtitle = "مقاطع الفيديو",
+                            icon = "🎬", tint = androidx.compose.ui.graphics.Color(0xFFE08A3E),
+                            modifier = Modifier.weight(1f)
+                        ) { activeFilter = FileFilter.VIDEO; folderPicker.launch(null) }
+                        HomeCategoryCard(
+                            title = "المستندات", subtitle = "PDF والنصوص",
+                            icon = "📄", tint = androidx.compose.ui.graphics.Color(0xFF3A8B63),
+                            modifier = Modifier.weight(1f)
+                        ) { activeFilter = FileFilter.DOCUMENTS; folderPicker.launch(null) }
+                    }
+                    Card(
+                        shape = RoundedCornerShape(18.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = androidx.compose.material3.CardDefaults.cardColors(
+                            containerColor = androidx.compose.ui.graphics.Color(0xFFE7F4F2)
+                        )
+                    ) {
+                        Row(
+                            Modifier.fillMaxWidth().padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Text("🔒", style = MaterialTheme.typography.titleLarge)
+                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text("خصوصيتك أولًا", fontWeight = FontWeight.Bold)
+                                Text(
+                                    "يعمل محليًا دون إنترنت. الوصول يقتصر على المجلد الذي تختاره.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
                     Spacer(Modifier.weight(1f))
@@ -401,7 +538,23 @@ private fun FileRow(
     Card(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick), shape = RoundedCornerShape(12.dp)) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 9.dp),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-            if (selectionMode) Checkbox(checked = selected, onCheckedChange = { onToggle() }) else Text(icon)
+            if (selectionMode) {
+                Checkbox(checked = selected, onCheckedChange = { onToggle() })
+            } else {
+                val iconTint = when {
+                    file.isDirectory -> androidx.compose.ui.graphics.Color(0xFFFFF0C2)
+                    LocalFileRules.isImage(name) -> androidx.compose.ui.graphics.Color(0xFFE6E7FF)
+                    LocalFileRules.isVideo(name) -> androidx.compose.ui.graphics.Color(0xFFFFE8D5)
+                    LocalFileRules.isAudio(name) -> androidx.compose.ui.graphics.Color(0xFFE4F5ED)
+                    LocalFileRules.isZipArchive(name) -> androidx.compose.ui.graphics.Color(0xFFFFEBC2)
+                    LocalFileRules.isPdf(name) -> androidx.compose.ui.graphics.Color(0xFFFFE2E2)
+                    else -> androidx.compose.ui.graphics.Color(0xFFE3EFF7)
+                }
+                Box(
+                    Modifier.size(42.dp).background(iconTint, RoundedCornerShape(13.dp)),
+                    contentAlignment = Alignment.Center
+                ) { Text(icon, style = MaterialTheme.typography.titleMedium) }
+            }
             Column(Modifier.weight(1f)) {
                 Text(name, fontWeight = FontWeight.Medium, maxLines = 2)
                 Text(if (file.isDirectory) "مجلد" else formatSize(file.length()), style = MaterialTheme.typography.labelSmall,
@@ -671,6 +824,41 @@ private fun openWithExternalApp(context: Context, file: DocumentFile) {
         context.startActivity(Intent.createChooser(intent, "فتح الملف بواسطة"))
     } catch (_: ActivityNotFoundException) {
         Toast.makeText(context, "لا يوجد تطبيق محلي لفتح هذا النوع من الملفات.", Toast.LENGTH_LONG).show()
+    }
+}
+
+
+@Composable
+private fun HomeCategoryCard(
+    title: String,
+    subtitle: String,
+    icon: String,
+    tint: androidx.compose.ui.graphics.Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
+        shape = RoundedCornerShape(18.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.ui.graphics.Color.White
+        )
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                Modifier.size(42.dp).background(tint.copy(alpha = 0.14f), RoundedCornerShape(13.dp)),
+                contentAlignment = Alignment.Center
+            ) { Text(icon, style = MaterialTheme.typography.titleMedium) }
+            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                Text(subtitle, style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            }
+        }
     }
 }
 
